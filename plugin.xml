@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="br.com.pontosistemas.webservice"
+    version="1.0.0">
+    
+    <name>RBE Webservice</name>
+    <description>Read and Update data to file .json</description>
+    <author> Ponto Sistemas </author>
+    <license>Apache 2.0</license>
+    <repo>https://github.com/negherbon/mobile-rbe-plugin-webservice.git</repo>
+    
+    <!-- Copiar o js para o projeto que instalar o plugin
+    <js-module src="www/webservice.js" name="RBEWebservice">
+        <clobbers target="webservice" />
+    </js-module>-->
+    
+    <js-module src="www/webservice.js" name="Webservice">
+        <clobbers target="window.webservice" />
+    </js-module>
+
+    <!-- android -->
+	<platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="RBEWebservice" >
+                <param name="android-package" value="br.com.pontosistemas.webservice.RBEWebservice"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/RBEWebservice.java" target-dir="src/br/com/pontosistemas/webservice" />
+        <source-file src="src/android/Json.java" target-dir="src/br/com/pontosistemas/webservice" />
+    </platform>
+    
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="RBEWebservice">
+                <param name="ios-package" value="RBEWebservice" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/RBEWebservice.h" />
+        <source-file src="src/ios/RBEWebservice.m" />
+    </platform>
+    
+    <!-- wp7
+    <platform name="wp7">
+        <config-file target="config.xml" parent="/*">
+            <feature name="NetworkStatus">
+                <param name="wp-package" value="NetworkStatus"/>
+            </feature>
+        </config-file>
+        
+        <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+            <Capability Name="ID_CAP_NETWORKING" />
+        </config-file>
+        
+        <source-file src="src/wp/NetworkStatus.cs" />
+    </platform>-->
+    
+    <!-- wp8
+    <platform name="wp8">
+        <config-file target="config.xml" parent="/*">
+            <feature name="NetworkStatus">
+                <param name="wp-package" value="NetworkStatus"/>
+            </feature>
+        </config-file>
+        
+        <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+            <Capability Name="ID_CAP_NETWORKING" />
+        </config-file>
+        
+        <source-file src="src/wp/NetworkStatus.cs" />
+    </platform>-->
+    
+</plugin>
