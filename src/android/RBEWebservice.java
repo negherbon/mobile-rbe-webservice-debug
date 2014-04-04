@@ -1,6 +1,7 @@
 package br.com.pontosistemas.webservice;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,14 +31,20 @@ public class RBEWebservice extends CordovaPlugin {
 	
 	public static final String NATIVE_ACTION_STRING = "webservice";
 	public static final String SUCCESS_PARAMETER="success";
+	private CordovaInterface activity;
 	
 	// Construtor
 	public RBEWebservice(){
 		
 	}
 	
-	/*public void getDataSaveFile(CordovaInterface activity) {
-
+	
+	/*
+	 * @param int action 
+	 * action 1 = Write data on file
+	 * action 2 = update data on file
+	 * */
+	public void getDataSaveFile(int action) {
 		new AsyncTask<String, Void, JSONObject>() {
 			JSONObject jsonItem;
 
@@ -61,14 +68,24 @@ public class RBEWebservice extends CordovaPlugin {
 			protected void onPostExecute(JSONObject jsonData) {
 				super.onPostExecute(jsonData);
 				try {
-					writeFileInternalStorage(jsonData.toString(), activity.getActivity().getApplicationContext(), "rbe.json");
+					
+					switch(action){
+						case 1:
+							writeFileInternalStorage(jsonData.toString(), this.activity.getActivity().getApplicationContext(), "rbe.json");
+							break;
+						case 2:
+							updateFileInternalStorage(jsonData.toString(), this.activity.getActivity().getApplicationContext(), "rbe.json");
+							break;
+					}
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}.execute();
 	}
-	*/
+	
 	public boolean isSdReadable() {
 
 		boolean mExternalStorageAvailable = false;
@@ -89,7 +106,7 @@ public class RBEWebservice extends CordovaPlugin {
 		}
 		return mExternalStorageAvailable;
 	}
-	/*
+	
 	public void writeFileInternalStorage(String strWrite,
 			Context context, String fileName) {
 		try {
@@ -108,9 +125,9 @@ public class RBEWebservice extends CordovaPlugin {
 		} catch (Exception e) {
 			// Your Code
 		}
-	}*/
+	}
 
-	public String readFileInternalStorage(CordovaInterface activity) {
+	public String readFileInternalStorage() {
 		
 		String stringToReturn = " ";
 		try {
@@ -118,7 +135,7 @@ public class RBEWebservice extends CordovaPlugin {
 								// the post
 			{
 				// String sfilename = fileName;
-				InputStream inputStream = activity.getActivity().getApplicationContext().openFileInput("rbe");
+				InputStream inputStream = this.activity.getActivity().getApplicationContext().openFileInput("rbe");
 
 				if (inputStream != null) {
 					InputStreamReader inputStreamReader = new InputStreamReader(
@@ -154,20 +171,42 @@ public class RBEWebservice extends CordovaPlugin {
 	    
 	 public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 	      Log.d("Inicializo", "Deu uma inicializada no bixo");
+	      this.activity = cordova;
 	      super.initialize(cordova, webView);
 	  }
-
+	 
+	 
+	 
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		Log.d("Hello Plugin", "Hello, this is a native function called on javascript function");
-		
-		if (NATIVE_ACTION_STRING.equals(action)){
-		    JSONObject r = new JSONObject();
-            	    r.put("retorno", "Doidoo");
-            	    callbackContext.success(r);
-            
-	            return true;
+		JSONObject r = new JSONObject();
+		if (action.equals("webservice")){
+			File path = Environment.getDataDirectory();
+			Log.d("Path", path);
+			Log.d("Absolutepath", path.getAbsolutePath());
+			
+			/*File file = new File();
+			
+			if (!file){
+				// se o arquivo não existir
+				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
+			}else{
+				// se o arquivo existir dá um update
+				this.getDataSaveFile(2);
+			}*/
+            return true;
 		}
+		
+		if (action.equals("getData")){
+			String data = this.readFileInternalStorage();
+			r.put("data", data);
+		}
+		
+		r.put("retorno", "retorno");
+	    callbackContext.success(r);
 		
 		return false;
 	}
+
+	
 }
