@@ -44,7 +44,7 @@ public class RBEWebservice extends CordovaPlugin {
 	 * action 1 = Write data on file
 	 * action 2 = update data on file
 	 * */
-	public void getDataSaveFile(int action) {
+	/*public void getDataSaveFile(int action) {
 		new AsyncTask<String, Void, JSONObject>() {
 			JSONObject jsonItem;
 
@@ -159,7 +159,7 @@ public class RBEWebservice extends CordovaPlugin {
 		}
 	
 		return stringToReturn;
-	}
+	}*/
 	
 	 /**
 	     * Sets the context of the Command. This can then be used to do things like
@@ -188,19 +188,19 @@ public class RBEWebservice extends CordovaPlugin {
 			/*File file = new File();
 			
 			if (!file){
-				// se o arquivo não existir
+				// se o arquivo nÃ£o existir
 				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
 			}else{
-				// se o arquivo existir dá um update
+				// se o arquivo existir dÃ¡ um update
 				this.getDataSaveFile(2);
 			}*/
             return true;
 		}
 		
-		if (action.equals("getData")){
+		/*if (action.equals("getData")){
 			String data = this.readFileInternalStorage();
 			r.put("data", data);
-		}
+		}*/
 		
 		r.put("retorno", "retorno");
 	    callbackContext.success(r);
