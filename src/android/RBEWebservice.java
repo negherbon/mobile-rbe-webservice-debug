@@ -1,43 +1,68 @@
 package br.com.pontosistemas.webservice;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-
-import com.squareup.okhttp.internal.Util;
 
 
 public class RBEWebservice extends CordovaPlugin {
 	
 	public static final String NATIVE_ACTION_STRING = "webservice";
 	public static final String SUCCESS_PARAMETER="success";
-	//private CordovaInterface activity;
+	private CordovaInterface activity;
 	
 	// Construtor
 	public RBEWebservice(){
 		
 	}
 	
+	public void getDataFromWeb() throws IOException{
+		URL url = new URL("ftp://mirror.csclub.uwaterloo.ca/index.html");
+		URLConnection urlConnection = url.openConnection();
+		InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+		try {
+		   readStream(in);
+			
+		}finally {
+		   in.close();
+		}
+	}
+	
+	
+	private String readStream(InputStream is) {
+	    try {
+	      ByteArrayOutputStream bo = new ByteArrayOutputStream();
+	      int i = is.read();
+	      while(i != -1) {
+	        bo.write(i);
+	        i = is.read();
+	      }
+	      return bo.toString();
+	    } catch (IOException e) {
+	      return "";
+	    }
+	}
 	
 	/*
 	 * @param int action 
@@ -45,12 +70,13 @@ public class RBEWebservice extends CordovaPlugin {
 	 * action 2 = update data on file
 	 * */
 	/*public void getDataSaveFile(int action) {
+		
 		new AsyncTask<String, Void, JSONObject>() {
 			JSONObject jsonItem;
-
+			
 			@Override
 			protected void onPreExecute() {
-
+					
 			}
 
 			protected JSONObject doInBackground(String... urls) {
@@ -68,23 +94,16 @@ public class RBEWebservice extends CordovaPlugin {
 			protected void onPostExecute(JSONObject jsonData) {
 				super.onPostExecute(jsonData);
 				try {
-					
-					switch(action){
-						case 1:
-							writeFileInternalStorage(jsonData.toString(), this.activity.getActivity().getApplicationContext(), "rbe.json");
-							break;
-						case 2:
-							updateFileInternalStorage(jsonData.toString(), this.activity.getActivity().getApplicationContext(), "rbe.json");
-							break;
-					}
-					
-					
+					writeFileInternalStorage(jsonData.toString(), this.activity.getActivity().getApplicationContext(), "rbe.json");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}.execute();
+		
 	}
+	
+	
 	
 	public boolean isSdReadable() {
 
@@ -171,7 +190,7 @@ public class RBEWebservice extends CordovaPlugin {
 	    
 	 public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 	      Log.d("Inicializo", "Deu uma inicializada no bixo");
-	      //this.activity = cordova;
+	      this.activity = cordova;
 	      super.initialize(cordova, webView);
 	  }
 	 
@@ -182,15 +201,24 @@ public class RBEWebservice extends CordovaPlugin {
 		
 		if (action.equals("webservice")){
 			File path = Environment.getDataDirectory();
-			Log.d("Absolutepath", path.getAbsolutePath());
+			String filePath = path.getAbsolutePath().concat("/rbe.json");
+			
+			Log.d("Absolutepath", path.getAbsolutePath().concat("/rbe.json"));
+			
+			try {
+				getDataFromWeb();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			/*File file = new File();
 			
 			if (!file){
-				// se o arquivo nÃƒÂ£o existir
+				// se o arquivo nÃƒÆ’Ã‚Â£o existir
 				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
 			}else{
-				// se o arquivo existir dÃƒÂ¡ um update
+				// se o arquivo existir dÃƒÆ’Ã‚Â¡ um update
 				this.getDataSaveFile(2);
 			}*/
 			
