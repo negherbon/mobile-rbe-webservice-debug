@@ -31,7 +31,7 @@ public class RBEWebservice extends CordovaPlugin {
 	
 	public static final String NATIVE_ACTION_STRING = "webservice";
 	public static final String SUCCESS_PARAMETER="success";
-	private CordovaInterface activity;
+	//private CordovaInterface activity;
 	
 	// Construtor
 	public RBEWebservice(){
@@ -171,7 +171,7 @@ public class RBEWebservice extends CordovaPlugin {
 	    
 	 public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 	      Log.d("Inicializo", "Deu uma inicializada no bixo");
-	      this.activity = cordova;
+	      //this.activity = cordova;
 	      super.initialize(cordova, webView);
 	  }
 	 
