@@ -182,16 +182,15 @@ public class RBEWebservice extends CordovaPlugin {
 		
 		if (action.equals("webservice")){
 			File path = Environment.getDataDirectory();
-			Log.d("Path", path);
 			Log.d("Absolutepath", path.getAbsolutePath());
 			
 			/*File file = new File();
 			
 			if (!file){
-				// se o arquivo nÃ£o existir
+				// se o arquivo nÃƒÂ£o existir
 				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
 			}else{
-				// se o arquivo existir dÃ¡ um update
+				// se o arquivo existir dÃƒÂ¡ um update
 				this.getDataSaveFile(2);
 			}*/
 			
