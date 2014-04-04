@@ -179,7 +179,7 @@ public class RBEWebservice extends CordovaPlugin {
 	 
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		Log.d("Hello Plugin", "Hello, this is a native function called on javascript function");
-		JSONObject r = new JSONObject();
+		
 		if (action.equals("webservice")){
 			File path = Environment.getDataDirectory();
 			Log.d("Path", path);
@@ -194,6 +194,11 @@ public class RBEWebservice extends CordovaPlugin {
 				// se o arquivo existir dÃ¡ um update
 				this.getDataSaveFile(2);
 			}*/
+			
+			JSONObject r = new JSONObject();
+			r.put("retorno", "retorno");
+			callbackContext.success(r);
+			
             return true;
 		}
 		
@@ -202,8 +207,6 @@ public class RBEWebservice extends CordovaPlugin {
 			r.put("data", data);
 		}*/
 		
-		r.put("retorno", "retorno");
-	    callbackContext.success(r);
 		
 		return false;
 	}
