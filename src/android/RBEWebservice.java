@@ -42,8 +42,8 @@ public class RBEWebservice extends CordovaPlugin {
 		URLConnection urlConnection = url.openConnection();
 		InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 		try {
-		   readStream(in);
-			
+		   String str = readStream(in);
+		   Log.d("File ", str);
 		}finally {
 		   in.close();
 		}
