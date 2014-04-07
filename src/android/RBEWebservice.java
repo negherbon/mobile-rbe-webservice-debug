@@ -143,7 +143,7 @@ public class RBEWebservice extends CordovaPlugin {
 		
 		// Se for para pegar os dados do device
 		if (action.equals("getData")){
-			callbackContext.success(getDataFromDB());
+			callbackContext.success("getDataFromDB()");
 			return true;
 		}
 
