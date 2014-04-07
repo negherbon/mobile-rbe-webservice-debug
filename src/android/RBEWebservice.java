@@ -231,7 +231,7 @@ public class RBEWebservice extends CordovaPlugin {
 		Log.d("Hello Plugin", "Hello, this is a native function called on javascript function");
 		String filename = "data.json";
 		
-		JSONObject r = new JSONObject();
+		
 		if (action.equals("webservice")){
 		
 			try {
@@ -239,7 +239,7 @@ public class RBEWebservice extends CordovaPlugin {
 				// Se o arquivo existe
 				if (fileExists(filename)){
 					Log.d("Arquivo ", "O ARQUIVO EXISTE");
-					// Atualiza o conteÃºdo dele
+					// Atualiza o conteÃƒÂºdo dele
 					printDataOnFile(filename, dados);
 				}else{
 					createNewFile(filename);
@@ -249,24 +249,25 @@ public class RBEWebservice extends CordovaPlugin {
 			} catch (Exception e) {
 			  e.printStackTrace();
 			}
-
 			
-			r.put("", "");
+			Log.d("Retorno ", "Vai retornar");
+			JSONObject r = new JSONObject();
+			r.put("retorno", "retorno");
 			callbackContext.success(r);
             return true;
 		}
 		
-		// Se for só pra pegar os dados
+		// Se for sÃ³ pra pegar os dados
 		if (action.equals("getData")){
 			Log.d("GETDATA", "Getdata");
 			try {
+				JSONObject r = new JSONObject();
 				r.put("data", getDataFromDirectory(filename));
+				callbackContext.success(r);
+				return true;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			callbackContext.success(r);
-			return true;
 		}
 
 		return false;
