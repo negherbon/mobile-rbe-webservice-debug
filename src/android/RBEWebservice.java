@@ -23,7 +23,8 @@ import android.util.Log;
 import com.the9tcat.hadi.DefaultDAO;
 
 public class RBEWebservice extends CordovaPlugin {
-	CordovaInterface activity;
+	private CordovaInterface activity;
+	private Context ctx = activity.getActivity().getApplicationContext();
 	
 	// Construtor
 	public RBEWebservice(){
@@ -40,6 +41,14 @@ public class RBEWebservice extends CordovaPlugin {
 		  //string temp contains all the data of the file.
 		  fin.close();
 		  return temp;
+	}
+	
+	public String getDataFromDB(){
+		DefaultDAO dao = new DefaultDAO(this.ctx); // Dao
+		// Verifica se ja tem o registro no banco
+		List<Data> dataDB = (List<Data>)dao.select(Data.class, false, null, null, null, null, null, null); 
+		
+		return dataDB.get(0).data;
 	}
 	
 	public String getDataFromWeb() throws IOException{
@@ -102,23 +111,18 @@ public class RBEWebservice extends CordovaPlugin {
 	 }
 	
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-		String filename = "data.json";
-		
-		
-		Context ctx = this.activity.getActivity().getApplicationContext();
-		
-		
+		//String filename = "data.json";
+
 		if (action.equals("webservice")){
 		
 			try {
-				
 				// Insere os dados no banco de dados
 				String dados = getDataFromWeb();
-				DefaultDAO dao = new DefaultDAO(ctx); // Dao
+				DefaultDAO dao = new DefaultDAO(this.ctx); // Dao
 				Data dataJson = new Data(); // Model
 				dataJson.data = dados;
 				
-				// Verifica se já tem o registro no banco
+				// Verifica se ja tem o registro no banco
 				List<Data> dataDB = (List<Data>)dao.select(Data.class, false, null, null, null, null, null, null); 
 				
 				if (dataDB.size()==0){
@@ -129,17 +133,6 @@ public class RBEWebservice extends CordovaPlugin {
 					dao.update(dataJson, null, null, null);
 				}
 				
-				
-				
-				// Se o arquivo existe
-				/*if (fileExists(filename)){	
-					// Atualiza
-					printDataOnFile(filename, dados);
-				}else{
-					createNewFile(filename);
-					printDataOnFile(filename, dados);
-				}*/
-			  
 			} catch (Exception e) {
 			  e.printStackTrace();
 			}
@@ -150,12 +143,8 @@ public class RBEWebservice extends CordovaPlugin {
 		
 		// Se for para pegar os dados do device
 		if (action.equals("getData")){
-			try {
-				callbackContext.success(getDataFromDirectory(filename));
-				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			callbackContext.success(getDataFromDB());
+			return true;
 		}
 
 		return false;
