@@ -87,6 +87,13 @@ public class RBEWebservice extends CordovaPlugin {
 		File file = new File(activity.getActivity().getFilesDir(), filename);
 	}
 	
+	 public boolean fileExists(String filename){
+		 File file = this.activity.getActivity().getFileStreamPath(filename);
+		 return file.exists();
+	 }
+	
+	
+	 
 	/*
 	 * @param int action 
 	 * action 1 = Write data on file
@@ -217,63 +224,51 @@ public class RBEWebservice extends CordovaPlugin {
 	      super.initialize(cordova, webView);
 	 }
 	 
-	 public boolean fileExists(String filename){
-		 File file = this.activity.getActivity().getFileStreamPath(filename);
-		 return file.exists();
-	 }
+	
 	 
 	 
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		Log.d("Hello Plugin", "Hello, this is a native function called on javascript function");
+		String filename = "data.json";
 		
+		JSONObject r = new JSONObject();
 		if (action.equals("webservice")){
-			String filename = "data.json";
-			
-
+		
 			try {
-				
-				createNewFile(filename);
 				String dados = getDataFromWeb();
-				
 				// Se o arquivo existe
 				if (fileExists(filename)){
 					Log.d("Arquivo ", "O ARQUIVO EXISTE");
-					// Atualiza o conteúdo dele
+					// Atualiza o conteÃºdo dele
 					printDataOnFile(filename, dados);
-					Log.d("CONTEÚDO ", getDataFromDirectory(filename));
+				}else{
+					createNewFile(filename);
+					printDataOnFile(filename, dados);
 				}
 			  
 			} catch (Exception e) {
 			  e.printStackTrace();
 			}
+
 			
-			
-			
-		
-			
-			/*File file = new File();
-			
-			if (!file){
-				// se o arquivo nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o existir
-				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
-			}else{
-				// se o arquivo existir dÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ um update
-				this.getDataSaveFile(2);
-			}*/
-			
-			JSONObject r = new JSONObject();
-			r.put("retorno", "retorno");
+			r.put("", "");
 			callbackContext.success(r);
-			
             return true;
 		}
 		
-		/*if (action.equals("getData")){
-			String data = this.readFileInternalStorage();
-			r.put("data", data);
-		}*/
-		
-		
+		// Se for só pra pegar os dados
+		if (action.equals("getData")){
+			Log.d("GETDATA", "Getdata");
+			try {
+				r.put("data", getDataFromDirectory(filename));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			callbackContext.success(r);
+			return true;
+		}
+
 		return false;
 	}
 
