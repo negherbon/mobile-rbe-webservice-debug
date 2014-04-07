@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,23 +28,20 @@ import android.util.Log;
 
 
 public class RBEWebservice extends CordovaPlugin {
-	
-	public static final String NATIVE_ACTION_STRING = "webservice";
-	public static final String SUCCESS_PARAMETER="success";
-	private CordovaInterface activity;
+	CordovaInterface activity;
 	
 	// Construtor
 	public RBEWebservice(){
 		
 	}
 	
-	public void getDataFromWeb() throws IOException{
+	public String getDataFromWeb() throws IOException{
 		URL url = new URL("http://www.rbenergia.com.br/ws/wsrbe.php");
 		URLConnection urlConnection = url.openConnection();
 		InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 		try {
 		   String str = readStream(in);
-		   Log.d("File ", str);
+		   return str;
 		}finally {
 		   in.close();
 		}
@@ -200,25 +198,44 @@ public class RBEWebservice extends CordovaPlugin {
 		Log.d("Hello Plugin", "Hello, this is a native function called on javascript function");
 		
 		if (action.equals("webservice")){
-			File path = Environment.getDataDirectory();
-			String filePath = path.getAbsolutePath().concat("/rbe.json");
 			
-			Log.d("Absolutepath", path.getAbsolutePath().concat("/rbe.json"));
+			File file = new File(activity.getActivity().getFilesDir(), "data.json");
 			
+			String filename = "data.json";
+			FileOutputStream outputStream;
+
 			try {
-				this.getDataFromWeb();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			  String dados = getDataFromWeb();
+			  outputStream = this.activity.getActivity().openFileOutput(filename, Context.MODE_PRIVATE);
+			  outputStream.write(dados.getBytes());
+			  outputStream.close();
+			  
+			  
+			  FileInputStream fin = this.activity.getActivity().openFileInput("data.json");
+			  int c;
+			  String temp="";
+			  while( (c = fin.read()) != -1){
+			     temp = temp + Character.toString((char)c);
+			  }
+			  Log.d("File ", temp);
+			  //string temp contains all the data of the file.
+			  fin.close();
+			  
+			} catch (Exception e) {
+			  e.printStackTrace();
 			}
+			
+			
+			
+		
 			
 			/*File file = new File();
 			
 			if (!file){
-				// se o arquivo nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o existir
+				// se o arquivo nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o existir
 				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
 			}else{
-				// se o arquivo existir dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ um update
+				// se o arquivo existir dÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ um update
 				this.getDataSaveFile(2);
 			}*/
 			
