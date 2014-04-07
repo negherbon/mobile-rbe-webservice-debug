@@ -206,7 +206,7 @@ public class RBEWebservice extends CordovaPlugin {
 			Log.d("Absolutepath", path.getAbsolutePath().concat("/rbe.json"));
 			
 			try {
-				getDataFromWeb();
+				this.getDataFromWeb();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
