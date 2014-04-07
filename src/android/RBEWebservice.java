@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -19,7 +20,7 @@ import org.json.JSONException;
 
 import android.content.Context;
 import android.util.Log;
-
+import com.the9tcat.hadi.DefaultDAO;
 
 public class RBEWebservice extends CordovaPlugin {
 	CordovaInterface activity;
@@ -104,18 +105,40 @@ public class RBEWebservice extends CordovaPlugin {
 		String filename = "data.json";
 		
 		
+		Context ctx = this.activity.getActivity().getApplicationContext();
+		
+		
 		if (action.equals("webservice")){
 		
 			try {
+				
+				// Insere os dados no banco de dados
 				String dados = getDataFromWeb();
+				DefaultDAO dao = new DefaultDAO(ctx); // Dao
+				Data dataJson = new Data(); // Model
+				dataJson.data = dados;
+				
+				// Verifica se já tem o registro no banco
+				List<Data> dataDB = (List<Data>)dao.select(Data.class, false, null, null, null, null, null, null); 
+				
+				if (dataDB.size()==0){
+					Log.d("dataDB ", "0 linhas");
+					dao.insert(dataJson);
+				}else{
+					Log.d("dataDB dados", dataDB.get(0).data);
+					dao.update(dataJson, null, null, null);
+				}
+				
+				
+				
 				// Se o arquivo existe
-				if (fileExists(filename)){
+				/*if (fileExists(filename)){	
 					// Atualiza
 					printDataOnFile(filename, dados);
 				}else{
 					createNewFile(filename);
 					printDataOnFile(filename, dados);
-				}
+				}*/
 			  
 			} catch (Exception e) {
 			  e.printStackTrace();
