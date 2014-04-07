@@ -38,7 +38,7 @@ public class RBEWebservice extends CordovaPlugin {
 	}
 	
 	public void getDataFromWeb() throws IOException{
-		URL url = new URL("ftp://mirror.csclub.uwaterloo.ca/index.html");
+		URL url = new URL("http://www.rbenergia.com.br/ws/wsrbe.php");
 		URLConnection urlConnection = url.openConnection();
 		InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 		try {
@@ -215,10 +215,10 @@ public class RBEWebservice extends CordovaPlugin {
 			/*File file = new File();
 			
 			if (!file){
-				// se o arquivo nÃƒÆ’Ã‚Â£o existir
+				// se o arquivo nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o existir
 				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
 			}else{
-				// se o arquivo existir dÃƒÆ’Ã‚Â¡ um update
+				// se o arquivo existir dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ um update
 				this.getDataSaveFile(2);
 			}*/
 			
