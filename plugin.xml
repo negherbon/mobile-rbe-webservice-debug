@@ -29,7 +29,7 @@
         </config-file>
 
         <source-file src="src/android/RBEWebservice.java" target-dir="src/br/com/pontosistemas/webservice" />
-        <source-file src="src/android/Json.java" target-dir="src/br/com/pontosistemas/webservice" />
+        <source-file src="src/android/Data.java" target-dir="src/br/com/pontosistemas/webservice" />
     </platform>
     
     <!-- ios -->
