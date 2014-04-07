@@ -1,15 +1,12 @@
 package br.com.pontosistemas.webservice;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -19,11 +16,8 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
 
@@ -92,124 +86,7 @@ public class RBEWebservice extends CordovaPlugin {
 		 return file.exists();
 	 }
 	
-	
-	 
-	/*
-	 * @param int action 
-	 * action 1 = Write data on file
-	 * action 2 = update data on file
-	 * */
-	/*public void getDataSaveFile(int action) {
-		
-		new AsyncTask<String, Void, JSONObject>() {
-			JSONObject jsonItem;
-			
-			@Override
-			protected void onPreExecute() {
-					
-			}
 
-			protected JSONObject doInBackground(String... urls) {
-				try {
-
-					jsonItem = Json.getJson("http://www.rbenergia.com.br/ws/wsrbe.php");
-
-				} catch (Exception e) {
-					Log.d("ERROR", "Erro ao buscar os dados");
-				}
-				return jsonItem;
-			}
-
-			@Override
-			protected void onPostExecute(JSONObject jsonData) {
-				super.onPostExecute(jsonData);
-				try {
-					writeFileInternalStorage(jsonData.toString(), this.activity.getActivity().getApplicationContext(), "rbe.json");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.execute();
-		
-	}
-	
-	
-	
-	public boolean isSdReadable() {
-
-		boolean mExternalStorageAvailable = false;
-		try {
-			String state = Environment.getExternalStorageState();
-
-			if (Environment.MEDIA_MOUNTED.equals(state)) {
-				mExternalStorageAvailable = true;
-				Log.i("isSdReadable", "External storage card is readable.");
-			} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-				Log.i("isSdReadable", "External storage card is readable.");
-				mExternalStorageAvailable = true;
-			} else {
-				mExternalStorageAvailable = false;
-			}
-		} catch (Exception ex) {
-
-		}
-		return mExternalStorageAvailable;
-	}
-	
-	public void writeFileInternalStorage(String strWrite,
-			Context context, String fileName) {
-		try {
-			// Check if Storage is Readable
-			if (isSdReadable()) // isSdReadable()e method is define at bottom of
-								// the post
-			{
-				String smsfilename = fileName;
-				FileOutputStream fos = context.openFileOutput(smsfilename,
-						Context.MODE_PRIVATE);
-				fos.write(strWrite.getBytes());
-				fos.flush();
-				fos.close();
-
-			}
-		} catch (Exception e) {
-			// Your Code
-		}
-	}
-
-	public String readFileInternalStorage() {
-		
-		String stringToReturn = " ";
-		try {
-			if (isSdReadable()) // isSdReadable()e method is define at bottom of
-								// the post
-			{
-				// String sfilename = fileName;
-				InputStream inputStream = this.activity.getActivity().getApplicationContext().openFileInput("rbe");
-
-				if (inputStream != null) {
-					InputStreamReader inputStreamReader = new InputStreamReader(
-							inputStream);
-					BufferedReader bufferedReader = new BufferedReader(
-							inputStreamReader);
-					String receiveString = "";
-					StringBuilder stringBuilder = new StringBuilder();
-
-					while ((receiveString = bufferedReader.readLine()) != null) {
-						stringBuilder.append(receiveString);
-					}
-					inputStream.close();
-					stringToReturn = stringBuilder.toString();
-				}
-			}
-		} catch (FileNotFoundException e) {
-			Log.e("TAG", "File not found: " + e.toString());
-		} catch (IOException e) {
-			Log.e("TAG", "Can not read file: " + e.toString());
-		}
-	
-		return stringToReturn;
-	}*/
-	
 	 /**
 	     * Sets the context of the Command. This can then be used to do things like
 	     * get file paths associated with the Activity.
@@ -219,16 +96,11 @@ public class RBEWebservice extends CordovaPlugin {
 	     */
 	    
 	 public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-	      Log.d("Inicializo", "Deu uma inicializada no bixo");
 	      this.activity = cordova;
 	      super.initialize(cordova, webView);
 	 }
-	 
 	
-	 
-	 
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-		Log.d("Hello Plugin", "Hello, this is a native function called on javascript function");
 		String filename = "data.json";
 		
 		
@@ -238,8 +110,7 @@ public class RBEWebservice extends CordovaPlugin {
 				String dados = getDataFromWeb();
 				// Se o arquivo existe
 				if (fileExists(filename)){
-					Log.d("Arquivo ", "O ARQUIVO EXISTE");
-					// Atualiza o conteÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºdo dele
+					// Atualiza
 					printDataOnFile(filename, dados);
 				}else{
 					createNewFile(filename);
@@ -254,7 +125,7 @@ public class RBEWebservice extends CordovaPlugin {
             return true;
 		}
 		
-		// Se for sÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³ pra pegar os dados
+		// Se for para pegar os dados do device
 		if (action.equals("getData")){
 			try {
 				callbackContext.success(getDataFromDirectory(filename));
