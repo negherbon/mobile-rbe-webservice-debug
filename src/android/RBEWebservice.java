@@ -35,6 +35,18 @@ public class RBEWebservice extends CordovaPlugin {
 		
 	}
 	
+	public String getDataFromDirectory(String filename) throws IOException{
+		 FileInputStream fin = this.activity.getActivity().openFileInput(filename);
+		  int c;
+		  String temp="";
+		  while( (c = fin.read()) != -1){
+		     temp = temp + Character.toString((char)c);
+		  }
+		  //string temp contains all the data of the file.
+		  fin.close();
+		  return temp;
+	}
+	
 	public String getDataFromWeb() throws IOException{
 		URL url = new URL("http://www.rbenergia.com.br/ws/wsrbe.php");
 		URLConnection urlConnection = url.openConnection();
@@ -60,6 +72,19 @@ public class RBEWebservice extends CordovaPlugin {
 	    } catch (IOException e) {
 	      return "";
 	    }
+	}
+	
+	// Joga dados dentro de um arquivo
+	public void printDataOnFile(String filename, String content) throws IOException{
+		FileOutputStream outputStream;
+		outputStream = this.activity.getActivity().openFileOutput(filename, Context.MODE_PRIVATE);
+		outputStream.write(content.getBytes());
+		outputStream.close();
+	}
+	
+	public void createNewFile(String filename){
+		// Cria um novo arquivo
+		File file = new File(activity.getActivity().getFilesDir(), filename);
 	}
 	
 	/*
@@ -190,36 +215,28 @@ public class RBEWebservice extends CordovaPlugin {
 	      Log.d("Inicializo", "Deu uma inicializada no bixo");
 	      this.activity = cordova;
 	      super.initialize(cordova, webView);
-	  }
+	 }
 	 
+	 public boolean fileExists(String filename){
+		 File file = this.activity.getActivity().getFileStreamPath(filename);
+		 return file.exists();
+	 }
 	 
 	 
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		Log.d("Hello Plugin", "Hello, this is a native function called on javascript function");
 		
 		if (action.equals("webservice")){
-			
-			File file = new File(activity.getActivity().getFilesDir(), "data.json");
-			
 			String filename = "data.json";
-			FileOutputStream outputStream;
+			
 
 			try {
-			  String dados = getDataFromWeb();
-			  outputStream = this.activity.getActivity().openFileOutput(filename, Context.MODE_PRIVATE);
-			  outputStream.write(dados.getBytes());
-			  outputStream.close();
-			  
-			  
-			  FileInputStream fin = this.activity.getActivity().openFileInput("data.json");
-			  int c;
-			  String temp="";
-			  while( (c = fin.read()) != -1){
-			     temp = temp + Character.toString((char)c);
-			  }
-			  Log.d("File ", temp);
-			  //string temp contains all the data of the file.
-			  fin.close();
+				
+				createNewFile(filename);
+				
+				if (fileExists(filename)){
+					Log.d("Arquivo ", "O ARQUIVO EXISTE");
+				}
 			  
 			} catch (Exception e) {
 			  e.printStackTrace();
@@ -232,10 +249,10 @@ public class RBEWebservice extends CordovaPlugin {
 			/*File file = new File();
 			
 			if (!file){
-				// se o arquivo nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o existir
+				// se o arquivo nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o existir
 				this.getDataSaveFile(1); // pega os dados do webservice e grava nele
 			}else{
-				// se o arquivo existir dÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ um update
+				// se o arquivo existir dÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ um update
 				this.getDataSaveFile(2);
 			}*/
 			
