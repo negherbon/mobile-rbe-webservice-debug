@@ -127,10 +127,8 @@ public class RBEWebservice extends CordovaPlugin {
 				List<Data> dataDB = (List<Data>)dao.select(Data.class, false, null, null, null, null, null, null); 
 				
 				if (dataDB.size()==0){
-					Log.d("dataDB ", "0 linhas");
 					dao.insert(dataJson);
 				}else{
-					Log.d("dataDB dados", dataDB.get(0).data);
 					dao.update(dataJson, null, null, null);
 				}
 				
