@@ -24,7 +24,6 @@ import com.the9tcat.hadi.DefaultDAO;
 
 public class RBEWebservice extends CordovaPlugin {
 	private CordovaInterface activity;
-	private Context ctx = activity.getActivity().getApplicationContext();
 	
 	// Construtor
 	public RBEWebservice(){
@@ -44,7 +43,8 @@ public class RBEWebservice extends CordovaPlugin {
 	}
 	
 	public String getDataFromDB(){
-		DefaultDAO dao = new DefaultDAO(this.ctx); // Dao
+		Context ctx = activity.getActivity().getApplicationContext();
+		DefaultDAO dao = new DefaultDAO(ctx); // Dao
 		// Verifica se ja tem o registro no banco
 		List<Data> dataDB = (List<Data>)dao.select(Data.class, false, null, null, null, null, null, null); 
 		
@@ -112,13 +112,14 @@ public class RBEWebservice extends CordovaPlugin {
 	
 	public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 		//String filename = "data.json";
-
+		Context ctx = activity.getActivity().getApplicationContext();
+		
 		if (action.equals("webservice")){
 		
 			try {
 				// Insere os dados no banco de dados
 				String dados = getDataFromWeb();
-				DefaultDAO dao = new DefaultDAO(this.ctx); // Dao
+				DefaultDAO dao = new DefaultDAO(ctx); // Dao
 				Data dataJson = new Data(); // Model
 				dataJson.data = dados;
 				
