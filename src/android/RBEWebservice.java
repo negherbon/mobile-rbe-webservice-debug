@@ -239,7 +239,7 @@ public class RBEWebservice extends CordovaPlugin {
 				// Se o arquivo existe
 				if (fileExists(filename)){
 					Log.d("Arquivo ", "O ARQUIVO EXISTE");
-					// Atualiza o conteÃƒÆ’Ã‚Âºdo dele
+					// Atualiza o conteÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºdo dele
 					printDataOnFile(filename, dados);
 				}else{
 					createNewFile(filename);
@@ -251,13 +251,12 @@ public class RBEWebservice extends CordovaPlugin {
 			}
 			
 			Log.d("Retorno ", "Vai retornar");
-			JSONObject r = new JSONObject();
-			r.put("retorno1", "retorno2");
-			callbackContext.success(r);
+			
+			callbackContext.success("Retorno");
             return true;
 		}
 		
-		// Se for sÃƒÂ³ pra pegar os dados
+		// Se for sÃƒÆ’Ã‚Â³ pra pegar os dados
 		if (action.equals("getData")){
 			Log.d("GETDATA", "Getdata");
 			try {
