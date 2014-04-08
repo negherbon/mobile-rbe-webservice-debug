@@ -3,7 +3,6 @@ var webservice = {
      callWebservice: function(successCallback, errorCallback){
          // So chama se houver comunicacao
          if (webservice.hasConnection){
-             alert("Com conexao");
              cordova.exec(successCallback, errorCallback, "RBEWebservice", "webservice", []);
          }         
      },
@@ -18,7 +17,6 @@ var webservice = {
          return false;
      },
 	 callDataFromDir: function(successCallback, errorCallback){
-		alert("callDataFromDir");
 		cordova.exec(successCallback, errorCallback, "RBEWebservice", "getData", []);
 	 }
 };
